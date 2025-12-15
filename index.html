@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Routine - Spring 2025–2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .header p {
+      font-size: 1rem;
+      color: #64748b;
+      font-weight: 300;
+    }
+
+    .today-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1e293b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 300;
+      margin-top: 0.75rem;
+    }
+
+    .pulse-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .schedule {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .day-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 232, 240, 0.5);
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .day-card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .day-card.today {
+      border-color: rgba(148, 163, 184, 0.5);
+      box-shadow: 0 0 0 2px rgba(203, 213, 225, 0.3);
+    }
+
+    .day-header {
+      background: linear-gradient(to right, #1e293b, #334155);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .day-card.today .day-header {
+      background: linear-gradient(to right, #0f172a, #1e293b);
+    }
+
+    .day-header h2 {
+      color: white;
+      font-weight: 300;
+      font-size: 1.125rem;
+      letter-spacing: 0.025em;
+    }
+
+    .today-label {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+    }
+
+    .classes {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .class-item {
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      border: 1px solid;
+    }
+
+    .class-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .class-item.blue {
+      background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .class-item.emerald {
+      background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .class-item.purple {
+      background: linear-gradient(to right, rgba(168, 85, 247, 0.1), rgba(147, 51, 234, 0.1));
+      border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    .class-item.orange {
+      background: linear-gradient(to right, rgba(249, 115, 22, 0.1), rgba(234, 88, 12, 0.1));
+      border-color: rgba(249, 115, 22, 0.2);
+    }
+
+    .class-content {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .class-icon {
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+
+    .class-icon svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #475569;
+      stroke-width: 1.5;
+    }
+
+    .class-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .class-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .class-name {
+      color: #1e293b;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .class-type {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+
+    .class-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #475569;
+      font-weight: 300;
+    }
+
+    .class-time svg {
+      width: 0.875rem;
+      height: 0.875rem;
+      stroke-width: 2;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .legend {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 300;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .legend-dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      border: 1px solid;
+    }
+
+    .legend-dot.blue {
+      background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3));
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .legend-dot.emerald {
+      background: linear-gradient(to bottom right, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .legend-dot.purple {
+      background: linear-gradient(to bottom right, rgba(168, 85, 247, 0.3), rgba(147, 51, 234, 0.3));
+      border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    .legend-dot.orange {
+      background: linear-gradient(to bottom right, rgba(249, 115, 22, 0.3), rgba(234, 88, 12, 0.3));
+      border-color: rgba(249, 115, 22, 0.2);
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .header { margin-bottom: 2rem; }
+      .header h1 { font-size: 1.5rem; }
+      .header p { font-size: 0.875rem; }
+      .today-badge { font-size: 0.75rem; }
+      .schedule { gap: 1rem; }
+      .day-header { padding: 0.75rem 1rem; }
+      .day-header h2 { font-size: 1rem; }
+      .classes { padding: 0.75rem; gap: 0.5rem; }
+      .class-item { padding: 1rem; }
+      .class-header { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+      .class-name { font-size: 0.875rem; }
+      .class-time { font-size: 0.75rem; }
+      .legend { gap: 0.75rem; }
+      .footer { margin-top: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Class Routine</h1>
+      <p>Spring 2025–2026</p>
+      <div id="todayBadge"></div>
+    </div>
+
+    <div class="schedule" id="schedule"></div>
+
+    <div class="footer">
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot blue"></div>
+          <span>Digital Logic</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot emerald"></div>
+          <span>Chemistry</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot purple"></div>
+          <span>Algorithms</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot orange"></div>
+          <span>Software Eng.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const schedule = {
+      Sunday: [
+        { time: '08:00 – 09:30', course: 'Digital Logic and Circuits', type: 'Theory', color: 'blue', icon: 'cpu' },
+        { time: '10:20 – 12:20', course: 'Chemistry', type: 'Theory', color: 'emerald', icon: 'flask' },
+        { time: '12:40 – 15:00', course: 'Digital Logic and Circuits', type: 'Lab', color: 'blue', icon: 'cpu' }
+      ],
+      Monday: [
+        { time: '10:20 – 12:20', course: 'Algorithms', type: 'Theory', color: 'purple', icon: 'code' },
+        { time: '12:40 – 15:00', course: 'Software Engineering', type: 'Lab', color: 'orange', icon: 'book' }
+      ],
+      Tuesday: [
+        { time: '08:00 – 09:30', course: 'Digital Logic and Circuits', type: 'Theory', color: 'blue', icon: 'cpu' },
+        { time: '10:20 – 12:40', course: 'Chemistry', type: 'Lab', color: 'emerald', icon: 'flask' }
+      ],
+      Wednesday: [
+        { time: '10:20 – 12:40', course: 'Algorithms', type: 'Lab', color: 'purple', icon: 'code' },
+        { time: '12:40 – 14:40', course: 'Software Engineering', type: 'Theory', color: 'orange', icon: 'book' }
+      ]
+    };
+
+    const icons = {
+      cpu: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect width="14" height="14" x="5" y="5" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>',
+      flask: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 2v8L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45L14 10V2"/><path d="M8.5 2h7M7 16h10"/></svg>',
+      code: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>',
+      book: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+      clock: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'
+    };
+
+    function getCurrentDay() {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const today = new Date().getDay();
+      const dayName = days[today];
+      return schedule[dayName] ? dayName : null;
+    }
+
+    function renderSchedule() {
+      const currentDay = getCurrentDay();
+      const scheduleEl = document.getElementById('schedule');
+      const todayBadgeEl = document.getElementById('todayBadge');
+
+      if (currentDay) {
+        todayBadgeEl.innerHTML = `
+          <div class="today-badge">
+            <div class="pulse-dot"></div>
+            Today is ${currentDay}
+          </div>
+        `;
+      }
+
+      Object.entries(schedule).forEach(([day, classes]) => {
+        const isToday = day === currentDay;
+        
+        const dayCard = document.createElement('div');
+        dayCard.className = `day-card${isToday ? ' today' : ''}`;
+        dayCard.id = `day-${day}`;
+
+        dayCard.innerHTML = `
+          <div class="day-header">
+            <h2>${day}</h2>
+            ${isToday ? '<span class="today-label">Today</span>' : ''}
+          </div>
+          <div class="classes">
+            ${classes.map(cls => `
+              <div class="class-item ${cls.color}">
+                <div class="class-content">
+                  <div class="class-icon">
+                    ${icons[cls.icon]}
+                  </div>
+                  <div class="class-details">
+                    <div class="class-header">
+                      <h3 class="class-name">${cls.course}</h3>
+                      <span class="class-type">${cls.type}</span>
+                    </div>
+                    <div class="class-time">
+                      ${icons.clock}
+                      <span>${cls.time}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        scheduleEl.appendChild(dayCard);
+      });
+
+      if (currentDay) {
+        setTimeout(() => {
+          const dayEl = document.getElementById(`day-${currentDay}`);
+          if (dayEl) {
+            dayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+      }
+    }
+
+    renderSchedule();
+  </script>
+</body>
+</html>
